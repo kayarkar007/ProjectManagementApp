@@ -12,7 +12,10 @@ const MONGO_URI =
 // Middleware
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://project-management-app-aa21.vercel.app",
+  "http://localhost:5174",
+  "http://localhost:5175",
+  "https://project-management-app-indol.vercel.app",
+  "https://projectmanagementapp-53h0.onrender.com",
 ];
 
 app.use(
