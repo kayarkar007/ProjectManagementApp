@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
+const api = import.meta.env.VITE_API_BASE_URL;
+
 const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -19,15 +21,12 @@ export const AuthProvider = ({ children }) => {
     const initializeAuth = async () => {
       if (token) {
         try {
-          const response = await fetch(
-            "https://projectmanagementapp-53h0.onrender.com/api/me",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-            }
-          );
+          const response = await fetch(`${api}/api/me`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
 
           if (response.ok) {
             const userData = await response.json();
@@ -50,16 +49,13 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const login = async (email, password) => {
-    const response = await fetch(
-      "https://projectmanagementapp-53h0.onrender.com/api/login",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      }
-    );
+    const response = await fetch(`${api}/api/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
     const data = await response.json();
 
@@ -75,16 +71,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signup = async (userData) => {
-    const response = await fetch(
-      "https://projectmanagementapp-53h0.onrender.com/api/signup",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      }
-    );
+    const response = await fetch(`${api}/api/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
 
     const data = await response.json();
 
@@ -102,16 +95,13 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       if (token) {
-        await fetch(
-          "https://projectmanagementapp-53h0.onrender.com/api/logout",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        await fetch(`${api}/api/logout`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
       }
     } catch (error) {
       console.error("Logout error:", error);
@@ -123,17 +113,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateProfile = async (profileData) => {
-    const response = await fetch(
-      "https://projectmanagementapp-53h0.onrender.com/api/me",
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(profileData),
-      }
-    );
+    const response = await fetch(`${api}/api/me`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(profileData),
+    });
 
     const data = await response.json();
 
