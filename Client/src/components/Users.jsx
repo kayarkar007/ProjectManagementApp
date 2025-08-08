@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
-
+const api = import.meta.env.VITE_API_BASE_URL;
 const Users = () => {
   const { user, token } = useAuth();
   const [users, setUsers] = useState([]);
@@ -15,7 +15,7 @@ const Users = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/users", {
+      const response = await fetch(`${api}/api/users`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -41,16 +41,13 @@ const Users = () => {
     }
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/users/${userId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${api}/api/users/${userId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -71,16 +68,13 @@ const Users = () => {
     }
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/users/${userId}/promote`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${api}/api/users/${userId}/promote`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -103,16 +97,13 @@ const Users = () => {
     }
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/users/${userId}/demote`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${api}/api/users/${userId}/demote`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         const errorData = await response.json();

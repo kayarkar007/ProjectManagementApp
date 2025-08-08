@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
-
+const api = import.meta.env.VITE_API_BASE_URL;
 const Tasks = () => {
   const { user, token } = useAuth();
   const [tasks, setTasks] = useState([]);
@@ -28,7 +28,7 @@ const Tasks = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/tasks", {
+      const response = await fetch(`${api}/api/tasks`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -50,7 +50,7 @@ const Tasks = () => {
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/projects", {
+      const response = await fetch(`${api}/api/projects`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -68,7 +68,7 @@ const Tasks = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/users", {
+      const response = await fetch(`${api}/api/users`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -87,7 +87,7 @@ const Tasks = () => {
   const handleCreateTask = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/tasks", {
+      const response = await fetch(`${api}/api/tasks`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -127,16 +127,13 @@ const Tasks = () => {
     }
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/tasks/${taskId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${api}/api/tasks/${taskId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -151,17 +148,14 @@ const Tasks = () => {
 
   const handleUpdateProgress = async (taskId, progress) => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/tasks/${taskId}/progress`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ progress }),
-        }
-      );
+      const response = await fetch(`${api}/api/tasks/${taskId}/progress`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ progress }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();

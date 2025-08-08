@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
+const api = import.meta.env.VITE_API_BASE_URL;
 
 const Projects = () => {
   const { user, token } = useAuth();
@@ -30,7 +31,7 @@ const Projects = () => {
   const fetchProjects = async () => {
     try {
       setError("");
-      const response = await fetch("http://localhost:5000/api/projects", {
+      const response = await fetch(`${api}/api/projects`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -54,7 +55,7 @@ const Projects = () => {
     e.preventDefault();
     try {
       setError("");
-      const response = await fetch("http://localhost:5000/api/projects", {
+      const response = await fetch(`${api}/api/projects`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -97,7 +98,7 @@ const Projects = () => {
     try {
       setError("");
       const response = await fetch(
-        `http://localhost:5000/api/projects/${editingProject._id}`,
+        `${api}/api/projects/${editingProject._id}`,
         {
           method: "PUT",
           headers: {
@@ -145,16 +146,13 @@ const Projects = () => {
 
     try {
       setError("");
-      const response = await fetch(
-        `http://localhost:5000/api/projects/${projectId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${api}/api/projects/${projectId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -684,7 +682,7 @@ const Projects = () => {
             </div>
           </div>
         )}
-          </div>
+      </div>
     </div>
   );
 };
