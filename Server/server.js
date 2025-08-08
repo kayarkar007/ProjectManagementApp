@@ -50,6 +50,10 @@ app.get("/", (req, res) => {
     version: "1.0.0",
     endpoints: {
       auth: "/api/auth",
+      dashboard: "/api/dashboard",
+      analytics: "/api/analytics",
+      reports: "/api/reports",
+      settings: "/api/settings",
       projects: "/api/projects",
       tasks: "/api/tasks",
       users: "/api/users",
