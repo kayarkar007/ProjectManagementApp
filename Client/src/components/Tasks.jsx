@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../contexts/AuthContext";
+import React, { useState, useEffect, useCallback } from "react";
+import { useAuth } from "../contexts/useAuth";
 const api = import.meta.env.VITE_API_BASE_URL;
 const Tasks = () => {
   const { user, token } = useAuth();
@@ -20,13 +20,8 @@ const Tasks = () => {
     estimatedHours: "",
   });
 
-  useEffect(() => {
-    fetchTasks();
-    fetchProjects();
-    fetchUsers();
-  }, [token]);
-
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
+    // fetch logic
     try {
       const response = await fetch(`${api}/api/tasks`, {
         headers: {
@@ -46,9 +41,10 @@ const Tasks = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async () => {
+    // fetch logic
     try {
       const response = await fetch(`${api}/api/projects`, {
         headers: {
@@ -64,9 +60,10 @@ const Tasks = () => {
     } catch (err) {
       console.error("Failed to fetch projects:", err);
     }
-  };
+  }, [token]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
+    // fetch logic
     try {
       const response = await fetch(`${api}/api/users`, {
         headers: {
@@ -82,7 +79,16 @@ const Tasks = () => {
     } catch (err) {
       console.error("Failed to fetch users:", err);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchProjects();
+      await fetchTasks();
+      await fetchUsers();
+    };
+    fetchData();
+  }, [fetchProjects, fetchTasks, fetchUsers]);
 
   const handleCreateTask = async (e) => {
     e.preventDefault();

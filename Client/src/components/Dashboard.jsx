@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/useAuth";
 const api = import.meta.env.VITE_API_BASE_URL;
 
 const Dashboard = () => {
@@ -15,15 +15,6 @@ const Dashboard = () => {
   const [recentTasks, setRecentTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (!token) return;
-    setLoading(true);
-    fetchDashboardData();
-    const interval = setInterval(fetchDashboardData, 30000);
-    return () => clearInterval(interval);
-    // eslint-disable-next-line
-  }, [token]);
 
   const fetchDashboardData = async () => {
     try {
@@ -93,6 +84,15 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!token) return;
+    setLoading(true);
+    fetchDashboardData();
+    const interval = setInterval(fetchDashboardData, 30000);
+    return () => clearInterval(interval);
+    // eslint-disable-next-line
+  }, [token]);
 
   const getStatusColor = (status) => {
     switch (status) {

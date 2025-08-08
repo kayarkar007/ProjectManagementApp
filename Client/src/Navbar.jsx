@@ -6,7 +6,7 @@ import React, {
   useEffect, // side effects ke liye
   useRef, // reference banane ke liye
 } from "react";
-import { useAuth } from "./contexts/AuthContext";
+import { useAuth } from "./contexts/useAuth";
 import { useNavigate } from "react-router-dom";
 
 // Navigation links ka array, har ek object ek link ko represent karta hai

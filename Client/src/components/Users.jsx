@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../contexts/AuthContext";
+import React, { useState, useEffect, useCallback } from "react";
+import { useAuth } from "../contexts/useAuth";
 const api = import.meta.env.VITE_API_BASE_URL;
 const Users = () => {
   const { user, token } = useAuth();
@@ -7,33 +7,34 @@ const Users = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const fetchUsers = useCallback(async () => {
+    // fetch logic
+     try {
+       const response = await fetch(`${api}/api/users`, {
+         headers: {
+           Authorization: `Bearer ${token}`,
+           "Content-Type": "application/json",
+         },
+       });
+
+       if (!response.ok) {
+         throw new Error("Failed to fetch users");
+       }
+
+       const data = await response.json();
+       setUsers(data.users || []);
+     } catch (err) {
+       setError(err.message);
+     } finally {
+       setLoading(false);
+     }
+  }, [token]);
+
   useEffect(() => {
     if (user?.role === "admin") {
       fetchUsers();
     }
-  }, [token, user]);
-
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch(`${api}/api/users`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch users");
-      }
-
-      const data = await response.json();
-      setUsers(data.users || []);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [user?.role, fetchUsers]);
 
   const handleDeleteUser = async (userId) => {
     if (!window.confirm("Are you sure you want to delete this user?")) {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/useAuth";
 const api = import.meta.env.VITE_API_BASE_URL;
 
 const Projects = () => {
@@ -20,13 +20,6 @@ const Projects = () => {
     budget: "",
     tags: "",
   });
-
-  useEffect(() => {
-    if (!token) return;
-    setLoading(true);
-    fetchProjects();
-    // eslint-disable-next-line
-  }, [token]);
 
   const fetchProjects = async () => {
     try {
@@ -50,6 +43,13 @@ const Projects = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!token) return;
+    setLoading(true);
+    fetchProjects();
+    // eslint-disable-next-line
+  }, [token]);
 
   const handleCreateProject = async (e) => {
     e.preventDefault();

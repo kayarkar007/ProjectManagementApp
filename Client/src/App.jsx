@@ -5,7 +5,8 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { AuthProvider } from "./contexts/AuthContextProvider";
+import { useAuth } from "./contexts/useAuth";
 import Navbar from "./Navbar";
 import Dashboard from "./components/Dashboard";
 import Projects from "./components/Projects";
