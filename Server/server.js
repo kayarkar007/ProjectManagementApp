@@ -33,10 +33,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Connect to MongoDB
 mongoose
-  .connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(MONGO_URI)
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => {
     console.error("❌ Failed to connect to MongoDB:", err);
@@ -62,6 +59,7 @@ app.use("/api", require("./Routes/AuthRoutes"));
 app.use("/api", require("./Routes/ProjectRoutes"));
 app.use("/api", require("./Routes/TaskRoutes"));
 app.use("/api", require("./Routes/UserRoutes"));
+app.use("/api/analytics", require("./Routes/AnalyticsRoutes"));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

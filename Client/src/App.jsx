@@ -12,6 +12,8 @@ import Dashboard from "./components/Dashboard";
 import Projects from "./components/Projects";
 import Tasks from "./components/Tasks";
 import Users from "./components/Users";
+import Reports from "./components/Reports";
+import Settings from "./components/Settings";
 import LoginPage from "./LoginPage";
 import SignUpPage from "./SignUpPage";
 import AdminPage from "./AdminPage";
@@ -29,7 +31,7 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+  return isAuthenticated ? children : <Navigate to="/initialpage" replace />;
 };
 
 // Public Route component (redirects to dashboard if already authenticated)
@@ -104,6 +106,22 @@ const AppContent = () => {
             }
           />
           <Route
+            path="/reports"
+            element={
+              <ProtectedRoute>
+                <Reports />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/admin"
             element={
               <ProtectedRoute>
@@ -113,10 +131,12 @@ const AppContent = () => {
           />
           <Route
             path="/initialpage"
-            element={<InitialPage />} // Add InitialPage route
+            element={<InitialPage />} // InitialPage accessible to all users
           />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="*" element={<Navigate to="/InitialPage" replace />} />
+          {/* Show InitialPage at root "/" */}
+          <Route path="/" element={<InitialPage />} />
+          {/* Redirect all unknown routes to InitialPage */}
+          <Route path="*" element={<Navigate to="/initialpage" replace />} />
         </Routes>
       </div>
     </div>

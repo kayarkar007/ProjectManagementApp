@@ -317,6 +317,43 @@ exports.getUserTasks = async (req, res) => {
   }
 };
 
+// PUT /api/users/preferences - Update user preferences
+exports.updatePreferences = async (req, res) => {
+  try {
+    const {
+      emailNotifications,
+      pushNotifications,
+      darkMode,
+      language,
+      timezone,
+    } = req.body;
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    // Update preferences
+    user.preferences = {
+      emailNotifications: emailNotifications !== undefined ? emailNotifications : true,
+      pushNotifications: pushNotifications !== undefined ? pushNotifications : true,
+      darkMode: darkMode !== undefined ? darkMode : true,
+      language: language || "en",
+      timezone: timezone || "UTC",
+    };
+
+    await user.save();
+
+    res.json({
+      message: "Preferences updated successfully.",
+      preferences: user.preferences,
+    });
+  } catch (err) {
+    console.error("Update preferences error:", err);
+    res.status(500).json({ error: "Server error. Please try again." });
+  }
+};
+
 // GET /api/users/stats - Get user statistics
 exports.getUserStats = async (req, res) => {
   try {

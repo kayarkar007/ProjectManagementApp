@@ -71,20 +71,26 @@ const userSchema = new mongoose.Schema(
       type: Date,
     },
     preferences: {
-      theme: {
-        type: String,
-        enum: ["light", "dark"],
-        default: "dark",
+      emailNotifications: {
+        type: Boolean,
+        default: true,
       },
-      notifications: {
-        email: {
-          type: Boolean,
-          default: true,
-        },
-        push: {
-          type: Boolean,
-          default: true,
-        },
+      pushNotifications: {
+        type: Boolean,
+        default: true,
+      },
+      darkMode: {
+        type: Boolean,
+        default: true,
+      },
+      language: {
+        type: String,
+        enum: ["en", "es", "fr", "de"],
+        default: "en",
+      },
+      timezone: {
+        type: String,
+        default: "UTC",
       },
     },
   },

@@ -23,4 +23,7 @@ router.delete("/users/:id", authorize("admin"), UserController.deleteUser);
 router.get("/users/:id/projects", UserController.getUserProjects);
 router.get("/users/:id/tasks", UserController.getUserTasks);
 
+// User preferences route
+router.put("/users/preferences", UserController.updatePreferences);
+
 module.exports = router;

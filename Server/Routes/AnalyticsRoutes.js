@@ -14,16 +14,34 @@ const analyticsLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+// Validation error handling middleware
+const handleValidationErrors = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ 
+      error: "Validation failed", 
+      details: errors.array() 
+    });
+  }
+  next();
+};
+
 // Validation middleware
 const validateDateRange = [
   query("startDate")
     .optional()
-    .isISO8601()
-    .withMessage("Start date must be a valid ISO 8601 date"),
+    .custom((value) => {
+      const date = new Date(value);
+      return !isNaN(date.getTime());
+    })
+    .withMessage("Start date must be a valid date"),
   query("endDate")
     .optional()
-    .isISO8601()
-    .withMessage("End date must be a valid ISO 8601 date"),
+    .custom((value) => {
+      const date = new Date(value);
+      return !isNaN(date.getTime());
+    })
+    .withMessage("End date must be a valid date"),
   query("department")
     .optional()
     .isIn([
@@ -45,11 +63,17 @@ const validateReportParams = [
     .isIn(["project_summary", "team_performance", "financial_summary"])
     .withMessage("Invalid report type"),
   query("startDate")
-    .isISO8601()
-    .withMessage("Start date is required and must be a valid ISO 8601 date"),
+    .custom((value) => {
+      const date = new Date(value);
+      return !isNaN(date.getTime());
+    })
+    .withMessage("Start date is required and must be a valid date"),
   query("endDate")
-    .isISO8601()
-    .withMessage("End date is required and must be a valid ISO 8601 date"),
+    .custom((value) => {
+      const date = new Date(value);
+      return !isNaN(date.getTime());
+    })
+    .withMessage("End date is required and must be a valid date"),
   query("format")
     .optional()
     .isIn(["json", "csv"])
@@ -74,6 +98,7 @@ router.get(
   "/team",
   auth,
   validateDateRange,
+  handleValidationErrors,
   AnalyticsController.getTeamAnalytics
 );
 
@@ -82,6 +107,7 @@ router.get(
   "/reports",
   auth,
   validateReportParams,
+  handleValidationErrors,
   AnalyticsController.generateReport
 );
 

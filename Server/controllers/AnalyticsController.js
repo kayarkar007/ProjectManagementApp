@@ -705,9 +705,44 @@ exports.generateReport = async (req, res) => {
         break;
 
       case "team_performance":
-        // Reuse team analytics logic
-        const teamReport = await exports.getTeamAnalytics(req, res);
-        return; // Response already sent
+        // Get team performance data
+        const users = await User.find({ role: { $in: ["employee", "manager"] } });
+        const allTasks = await Task.find({
+          createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) },
+        });
+
+        const teamMembers = users.map(user => {
+          const userTasks = allTasks.filter(task => 
+            task.assignedTo.some(assigned => assigned.toString() === user._id.toString())
+          );
+          const completedTasks = userTasks.filter(task => task.status === "Completed");
+          
+          return {
+            id: user._id,
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            tasksAssigned: userTasks.length,
+            tasksCompleted: completedTasks.length,
+            completionRate: userTasks.length > 0 ? (completedTasks.length / userTasks.length) * 100 : 0,
+            averageTime: completedTasks.length > 0 ? 
+              completedTasks.reduce((sum, task) => {
+                if (task.startDate && task.completedDate) {
+                  return sum + moment(task.completedDate).diff(moment(task.startDate), "days");
+                }
+                return sum;
+              }, 0) / completedTasks.length : 0
+          };
+        });
+
+        reportData = {
+          totalMembers: teamMembers.length,
+          completedTasks: allTasks.filter(task => task.status === "Completed").length,
+          averageProductivity: teamMembers.length > 0 ? 
+            teamMembers.reduce((sum, member) => sum + member.completionRate, 0) / teamMembers.length : 0,
+          teamMembers: teamMembers
+        };
+        break;
 
       case "financial_summary":
         const financialProjects = await Project.find({
